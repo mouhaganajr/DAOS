@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_ChefDepartement">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Formations</h3>
+
+
+    <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+        <div style="text-align: center">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Formation" >Ajouter Formation</button>
+        </div>
+    </div>
+
+    <!-- Debut popup ajouter un Formation -->
+    <div data-dismiss="modal" style="margin-top:25px">
+        <div class="modal fade" id="form_Ajouter_Formation">
+            <div class="modal-dialog" >
+                <div class="modal-content panel-success" >
+                    <!--modal Header-->
+                    <div class="modal-header panel-heading" >
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter un Formation</h4>
+                    </div>
+                    <!--modal Body-->
+                    <form th:action="@{/ChefDepartement/ajouterFormation}" method="post">
+                        <div class="modal-body" >
+
+                            <div class="form-group">
+                                <label >Nom</label>
+                                <input type="text" class="form-control" name="nom" />
+                            </div>
+                            <div class="form-group">
+                                <label >Niveau</label>
+                                <input type="text" class="form-control" name="niveau" />
+                            </div>
+                        </div>
+                        <!--modal Footer-->
+                        <div class="modal-footer" >
+                            <div class="row">
+                                <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                    <button type="submit" class="btn btn-success">Ajouter</button>
+                                </div>
+                                <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                    <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin popup ajouter un Formation -->
+
+    <!-- Debut lister tout les Formations -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="table_Formation">
+            <thead>
+            <tr>
+                <th>Nom</th>
+
+                <th>Niveau</th>
+
+                <th>Operations</th>
+
+                <th>Details</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="formation:${formations}">
+
+                <td th:text="${formation.nom}"></td>
+                <td th:text="${formation.niveau}"></td>
+
+
+                <td>
+                    <button class="btn btn-info btn-sm" data-title="Edit" data-toggle="modal" th:attr="data-target='#form_Modifier_Formation'+${formation.id}" >
+                        Modifier
+                    </button>
+                    <button th:if="${formation.isArchive()} == false" class="btn btn-warning btn-xs" data-toggle="modal" th:attr="data-target='#form_Archiver_Formation'+${formation.id}">
+                        Archiver
+                    </button>
+                    <button th:if="${formation.isArchive()} == true" class="btn btn-primary btn-xs" data-toggle="modal" th:attr="data-target='#form_Archiver_Formation'+${formation.id}">
+                        Desarchiver
+                    </button>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/maquette/{id}(id=${formation.id})}">
+                        Voir
+                    </a>
+                </td>
+                <!-- Debut popup modifier un formation -->
+                <div data-dismiss="modal">
+                    <div class="modal fade" th:attr="id='form_Modifier_Formation'+${formation.id}" >
+                        <div class="modal-dialog" >
+                            <div class="modal-content panel-info" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Modifier formation</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/modifierFormation}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${formation.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Nom</label>
+                                            <input type="text" class="form-control" name="nom" th:value="${formation.nom}"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label >Niveau</label>
+                                            <input type="text" class="form-control" name="niveau" th:value="${formation.niveau}"/>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-info" >Modifier</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin popup modifier un formation -->
+
+
+                <!-- Debut popup Archiver un formation -->
+                <div data-dismiss="modal">
+                    <div class="modal fade" th:attr="id='form_Archiver_Formation'+${formation.id}">
+                        <div class="modal-dialog" >
+
+                            <div th:if="${formation.isArchive()} == false" class="modal-content panel-warning" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Archiver formation</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/archiverFormation}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${formation.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Nom</label> :
+                                            <span th:text="${formation.nom}"/> </span>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-warning">Archiver</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div th:if="${formation.isArchive()} == true" class="modal-content panel-primary" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Desarchiver formation</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/archiverFormation}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${formation.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Nom</label> :
+                                            <span th:text="${formation.nom}"/> </span>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-primary">desarchiver</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin popup Archiver un formation-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Fin lister tout les formations -->
+
+    <!-- Debut Datatable lister formations -->
+    <script>
+            $(document).ready(function() {
+                $("#table_Formation").DataTable({
+
+                });
+            })
+        </script>
+    <!-- Fin Datatable lister table_Formations -->
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</body>
+</html>

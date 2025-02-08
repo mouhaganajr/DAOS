@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_ChefDepartement">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des UE</h3>
+
+
+    <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+        <div style="text-align: center">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_UE" >Ajouter UE</button>
+        </div>
+    </div>
+
+    <!-- Debut popup ajouter un UE -->
+    <div data-dismiss="modal" style="margin-top:25px">
+        <div class="modal fade" id="form_Ajouter_UE">
+            <div class="modal-dialog" >
+                <div class="modal-content panel-success" >
+                    <!--modal Header-->
+                    <div class="modal-header panel-heading" >
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter un UE</h4>
+                    </div>
+                    <!--modal Body-->
+                    <form th:action="@{/ChefDepartement/ajouterUE}" method="post">
+                        <div class="modal-body" >
+                            <div class="form-group">
+                                <label >Code</label>
+                                <input type="text" class="form-control" name="code" />
+                            </div>
+
+                            <div class="form-group">
+                                <label >Libelle</label>
+                                <input type="text" class="form-control" name="libelle" />
+                            </div>
+
+                            <div class="form-group">
+                                <label >Credits</label>
+                                <input type="text" class="form-control" name="credits" />
+                            </div>
+
+                            <div class="form-group">
+                                <label >Coefficient</label>
+                                <input type="text" class="form-control" name="coeff_UE" />
+                            </div>
+
+
+
+                        </div>
+                        <!--modal Footer-->
+                        <div class="modal-footer" >
+                            <div class="row">
+                                <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                    <button type="submit" class="btn btn-success">Ajouter</button>
+                                </div>
+                                <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                    <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin popup ajouter un UE -->
+
+    <!-- Debut lister tout les UEs -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="table_UE">
+            <thead>
+            <tr>
+                <th>Code</th>
+
+                <th> Libelle</th>
+                <th>Credits</th>
+                <th>Coefficients</th>
+                <th>Operations</th>
+
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ue:${ues}">
+                <td th:text="${ue.code}"></td>
+                <td th:text="${ue.libelle}"></td>
+                <td th:text="${ue.credits}"></td>
+                <td th:text="${ue.coeff_UE}"></td>
+
+
+                <td>
+                    <button class="btn btn-info btn-sm" data-title="Edit" data-toggle="modal" th:attr="data-target='#form_Modifier_UE'+${ue.id}" >
+                        Modifier
+                    </button>
+                    <button th:if="${ue.isActive()} == false" class="btn btn-success btn-xs" data-toggle="modal" th:attr="data-target='#form_Activer_UE'+${ue.id}">
+                        Activer
+                    </button>
+                    <button th:if="${ue.isActive()} == true" class="btn btn-danger btn-xs" data-toggle="modal" th:attr="data-target='#form_Activer_UE'+${ue.id}">
+                        Desactiver
+                    </button>
+                    <button th:if="${ue.isArchive()} == false" class="btn btn-warning btn-xs" data-toggle="modal" th:attr="data-target='#form_Archiver_UE'+${ue.id}">
+                        Archiver
+                    </button>
+                    <button th:if="${ue.isArchive()} == true" class="btn btn-primary btn-xs" data-toggle="modal" th:attr="data-target='#form_Archiver_UE'+${ue.id}">
+                        Desarchiver
+                    </button>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/detail_ue/{id}(id=${ue.id})}">
+                        Voir
+                    </a>
+            </td>
+
+                <!-- Debut popup modifier un UE -->
+                <div data-dismiss="modal">
+                    <div class="modal fade" th:attr="id='form_Modifier_UE'+${ue.id}" >
+                        <div class="modal-dialog" >
+                            <div class="modal-content panel-info" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Modifier UE</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/modifierUE}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${ue.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Code</label>
+                                            <input type="text" class="form-control" name="code" th:value="${ue.code}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Libelle</label>
+                                            <input type="text" class="form-control" name="libelle" th:value="${ue.libelle}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Credits</label>
+                                            <input type="text" class="form-control" name="credits" th:value="${ue.credits}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Coefficient</label>
+                                            <input type="text" class="form-control" name="coeff_UE" th:value="${ue.coeff_UE}"/>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-info" >Modifier</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin popup modifier un UE -->
+
+                <!-- Debut popup Activer un UE -->
+                <div data-dismiss="modal">
+                    <div class="modal fade" th:attr="id='form_Activer_UE'+${ue.id}">
+                        <div class="modal-dialog" >
+
+                            <div th:if="${ue.isActive()} == false" class="modal-content panel-success" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Activer UE</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/activerUE}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${ue.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >code</label> :
+                                            <span th:text="${ue.code}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Libelle</label> :
+                                            <span th:text="${ue.libelle}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Credits</label> :
+                                            <span th:text="${ue.credits}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Coefficient</label> :
+                                            <span th:text="${ue.coeff_UE}"/> </span>
+                                        </div>
+
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-success">Activer</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div th:if="${ue.isActive()} == true" class="modal-content panel-danger" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Desactiver UE</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/activerUE}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${ue.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >code</label> :
+                                            <span th:text="${ue.code}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Libelle</label> :
+                                            <span th:text="${ue.libelle}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Credits</label> :
+                                            <span th:text="${ue.credits}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Coefficient</label> :
+                                            <span th:text="${ue.coeff_UE}"/> </span>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-danger">Desactiver</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin popup Activer un UE -->
+
+
+                <!-- Debut popup Archiver un UE -->
+                <div data-dismiss="modal">
+                    <div class="modal fade" th:attr="id='form_Archiver_UE'+${ue.id}">
+                        <div class="modal-dialog" >
+
+                            <div th:if="${ue.isArchive()} == false" class="modal-content panel-warning" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Archiver UE</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/archiverUE}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${ue.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >code</label> :
+                                            <span th:text="${ue.code}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Libelle</label> :
+                                            <span th:text="${ue.libelle}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Credits</label> :
+                                            <span th:text="${ue.credits}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Coefficient</label> :
+                                            <span th:text="${ue.coeff_UE}"/> </span>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-warning">Archiver</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div th:if="${ue.isArchive()} == true" class="modal-content panel-primary" >
+                                <!--modal Header-->
+                                <div class="modal-header panel-heading" >
+                                    <button type="button" class="close" data-dismiss="modal">x</button>
+                                    <h4 class="modal-title" style="text-align: center">Desarchiver UE</h4>
+                                </div>
+                                <!--modal Body-->
+                                <form th:action="@{/ChefDepartement/archiverUE}" method="post">
+                                    <div class="modal-body" >
+                                        <div style="display: none">
+                                            <input name="id" th:value="${ue.id}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label >code</label> :
+                                            <span th:text="${ue.code}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Libelle</label> :
+                                            <span th:text="${ue.libelle}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Credits</label> :
+                                            <span th:text="${ue.credits}"/> </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Coefficient</label> :
+                                            <span th:text="${ue.coeff_UE}"/> </span>
+                                        </div>
+                                    </div>
+                                    <!--modal Footer-->
+                                    <div class="modal-footer" >
+                                        <div class="row">
+                                            <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                                <button type="submit" class="btn btn-primary">desarchiver</button>
+                                            </div>
+                                            <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                                <button type="button" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin popup Archiver un UE-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Fin lister tout les UEs -->
+
+    <!-- Debut Datatable lister UEs -->
+    <script>
+            $(document).ready(function() {
+                $("#table_UE").DataTable({
+
+                });
+            })
+        </script>
+    <!-- Fin Datatable lister UEs -->
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_ChefDepartement">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Maquettes</title>
+</head>
+<body>
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Maquettes</h3>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div th:each="formation : ${formation}">
+            <span th:text="${formation.nom}"></span> - <span th:text="${formation.Niveau}"></span>
+        </div>
+    </div> <!-- Fermeture de la div -->
+
+    <!-- Onglets pour Semestre 1 et Semestre 2 -->
+    <ul class="nav nav-tabs">
+        <li th:classappend="${semestreActuel == 'Semestre 1'} ? 'active' : ''">
+            <a data-toggle="tab" href="#tab_Semestre1">Semestre 1</a>
+        </li>
+        <li th:classappend="${semestreActuel == 'Semestre 2'} ? 'active' : ''">
+            <a data-toggle="tab" href="#tab_Semestre2">Semestre 2</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- Tab Semestre 1 -->
+        <div id="tab_Semestre1" class="tab-pane fade" th:classappend="${semestreActuel == 'Semestre 1'} ? 'in active' : ''">
+            <!-- Contenu pour le Semestre 1, par exemple la liste des maquettes -->
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Maquette1">Ajouter Maquette</button>
+                </div>
+            </div>
+
+            <!-- Modal pour ajouter une maquette -->
+            <div class="modal fade" id="form_Ajouter_Maquette1">
+                <div class="modal-dialog">
+                    <div class="modal-content panel-success">
+                        <!-- Modal Header -->
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title" style="text-align: center">Ajouter une Maquette</h4>
+                        </div>
+                        <!-- Modal Body -->
+                        <form th:action="@{/ChefDepartement/ajouterMaquette}" method="post">
+                            <div class="modal-body">
+                                <!-- Champ caché pour l'ID de la formation -->
+                                <input type="hidden" name="id" th:value="${formation.id}" />
+
+                                <!-- Champ affichant l'ID de la formation (lecture seule) -->
+                                <div class="form-group">
+                                    <label>ID de la formation</label>
+                                    <input type="text" class="form-control" name="formation" th:value="${formation.id}" readonly/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Semestre</label>
+                                    <select class="form-control" name="semestre" id="semestre1" required>
+                                        <option value="1">Semestre 1</option>                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>UEs Disponibles</label>
+                                    <!-- Liste des UE avec des cases à cocher -->
+                                    <div th:each="ue : ${ues}" class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="ueIds" th:value="${ue.id}" th:id="${'ue_' + ue.id}" />
+                                            <span th:text="${ue.libelle}"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                        <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
+                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau pour Semestre 1 -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Maquette1">
+                    <thead>
+                    <tr>
+                        <th rowspan="2" class="text-center align-middle">UNITÉS D'ENSEIGNEMENT</th>
+                        <th rowspan="2">Crédits</th>
+                        <th rowspan="2">Coefficient</th>
+                        <th colspan="8">ÉLÉMENTS CONSTITUTIFS</th>
+                    </tr>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>CM</th>
+                        <th>TD</th>
+                        <th>TP</th>
+                        <th>CM+TD/TP</th>
+                        <th>TPE</th>
+                        <th>VHT</th>
+                        <th>Coefficient EC</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Boucle principale pour chaque UE -->
+                    <th:block th:each="ue : ${maquettes.ues}">
+                        <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
+                            <th:block th:each="maquette : ${ue.maquettes}">
+                                <th:block th:if="${maquette.semestre == 1}">
+
+                        <tr>
+                            <!-- Informations de l'UE (fusionnée si plusieurs EC) -->
+                            <td th:text="${ue.libelle}" th:attr="rowspan=${ue.ecs.size()}"></td>
+                            <td th:text="${ue.credits}" th:attr="rowspan=${ue.ecs.size()}"></td>
+                            <td th:text="${ue.coeff_UE}" th:attr="rowspan=${ue.ecs.size()}"></td>
+
+                            <!-- Afficher le premier EC -->
+                            <td th:text="${ue.ecs[0].libelle}"></td>
+                            <td th:text="${ue.ecs[0].CM}"></td>
+                            <td th:text="${ue.ecs[0].TD}"></td>
+                            <td th:text="${ue.ecs[0].TP}"></td>
+                            <td th:text="${ue.ecs[0].TOTAL}"></td>
+                            <td th:text="${ue.ecs[0].TPE}"></td>
+                            <td th:text="${ue.ecs[0].VHT}"></td>
+                            <td th:text="${ue.ecs[0].coeff}"></td>
+                        </tr>
+
+                        <!-- Afficher le deuxième EC s'il existe -->
+                        <tr th:if="${ue.ecs.size() > 1}">
+                            <td th:text="${ue.ecs[1].libelle}"></td>
+                            <td th:text="${ue.ecs[1].CM}"></td>
+                            <td th:text="${ue.ecs[1].TD}"></td>
+                            <td th:text="${ue.ecs[1].TP}"></td>
+                            <td th:text="${ue.ecs[1].TOTAL}"></td>
+                            <td th:text="${ue.ecs[1].TPE}"></td>
+                            <td th:text="${ue.ecs[1].VHT}"></td>
+                            <td th:text="${ue.ecs[1].coeff}"></td>
+                        </tr>
+                        </th:block></th:block></th:block>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $("#table_Maquette1").DataTable({
+
+                    });
+                })
+            </script>
+        </div>
+
+        <!-- Tab Semestre 2 -->
+        <div id="tab_Semestre2" class="tab-pane fade" th:classappend="${semestreActuel == 'Semestre 2'} ? 'in active' : ''">
+            <!-- Contenu pour le Semestre 2, par exemple la liste des maquettes -->
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div style="text-align: center">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Maquette2">Ajouter Maquette</button>
+                </div>
+            </div>
+
+            <!-- Modal pour ajouter une maquette -->
+            <div class="modal fade" id="form_Ajouter_Maquette2">
+                <div class="modal-dialog">
+                    <div class="modal-content panel-success">
+                        <!-- Modal Header -->
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title" style="text-align: center">Ajouter une Maquette</h4>
+                        </div>
+                        <!-- Modal Body -->
+                        <form th:action="@{/ChefDepartement/ajouterMaquette}" method="post">
+                            <div class="modal-body">
+                                <!-- Champ caché pour l'ID de la formation -->
+                                <input type="hidden" name="id" th:value="${formation.id}" />
+
+                                <!-- Champ affichant l'ID de la formation (lecture seule) -->
+                                <div class="form-group">
+                                    <label>ID de la formation</label>
+                                    <input type="text" class="form-control" name="formation" th:value="${formation.id}" readonly/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Semestre</label>
+                                    <select class="form-control" name="semestre" id="semestre2" required>
+                                        <option value="2">Semestre 2</option>                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>UEs Disponibles</label>
+                                    <!-- Liste des UE avec des cases à cocher -->
+                                    <div th:each="ue : ${ues}" class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="ueIds" th:value="${ue.id}" th:id="${'ue_' + ue.id}" />
+                                            <span th:text="${ue.libelle}"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                                        <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
+                                    <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau pour Semestre 2 -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Maquette_S2">
+                    <thead>
+                    <tr>
+                        <th rowspan="2" class="text-center align-middle">UNITÉS D'ENSEIGNEMENT</th>
+                        <th rowspan="2">Crédits</th>
+                        <th rowspan="2">Coefficient</th>
+                        <th colspan="8">ÉLÉMENTS CONSTITUTIFS</th>
+                    </tr>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>CM</th>
+                        <th>TD</th>
+                        <th>TP</th>
+                        <th>CM+TD/TP</th>
+                        <th>TPE</th>
+                        <th>VHT</th>
+                        <th>Coefficient EC</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Boucle principale pour chaque UE -->
+                    <th:block th:each="ue : ${maquettes.ues}">
+                        <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
+                            <th:block th:each="maquette : ${ue.maquettes}">
+                                <th:block th:if="${maquette.semestre == 2}">
+                        <tr>
+                            <!-- Informations de l'UE (fusionnée si plusieurs EC) -->
+                            <td th:text="${ue.libelle}" th:attr="rowspan=${ue.ecs.size()}"></td>
+                            <td th:text="${ue.credits}" th:attr="rowspan=${ue.ecs.size()}"></td>
+                            <td th:text="${ue.coeff_UE}" th:attr="rowspan=${ue.ecs.size()}"></td>
+
+                            <!-- Afficher le premier EC -->
+                            <td th:text="${ue.ecs[0].libelle}"></td>
+                            <td th:text="${ue.ecs[0].CM}"></td>
+                            <td th:text="${ue.ecs[0].TD}"></td>
+                            <td th:text="${ue.ecs[0].TP}"></td>
+                            <td th:text="${ue.ecs[0].TOTAL}"></td>
+                            <td th:text="${ue.ecs[0].TPE}"></td>
+                            <td th:text="${ue.ecs[0].VHT}"></td>
+                            <td th:text="${ue.ecs[0].coeff}"></td>
+                        </tr>
+
+                        <!-- Afficher le deuxième EC s'il existe -->
+                        <tr th:if="${ue.ecs.size() > 1}">
+                            <td th:text="${ue.ecs[1].libelle}"></td>
+                            <td th:text="${ue.ecs[1].CM}"></td>
+                            <td th:text="${ue.ecs[1].TD}"></td>
+                            <td th:text="${ue.ecs[1].TP}"></td>
+                            <td th:text="${ue.ecs[1].TOTAL}"></td>
+                            <td th:text="${ue.ecs[1].TPE}"></td>
+                            <td th:text="${ue.ecs[1].VHT}"></td>
+                            <td th:text="${ue.ecs[1].coeff}"></td>
+                        </tr>
+                    </th:block>
+                            </th:block></th:block></th:block>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $("#table_Maquette_S2").DataTable({
+
+                    });
+                })
+            </script>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
