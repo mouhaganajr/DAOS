@@ -1,10 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_ChefDepartement">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Batiments</h3>
+
+
+    <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+        <div style="text-align: center">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Batiment" >Ajouter Batiment</button>
+        </div>
+    </div>
+
+    <!-- Debut popup ajouter un UE -->
+    <div data-dismiss="modal" style="margin-top:25px">
+        <div class="modal fade" id="form_Ajouter_Batiment">
+            <div class="modal-dialog" >
+                <div class="modal-content panel-success" >
+                    <!--modal Header-->
+                    <div class="modal-header panel-heading" >
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter un UE</h4>
+                    </div>
+                    <!--modal Body-->
+                    <form th:action="@{/ChefDepartement/ajouterBatiment}" method="post">
+                        <div class="modal-body" >
+                            <div class="form-group">
+                                <label >Nom</label>
+                                <input type="text" class="form-control" name="nom" />
+                            </div>
+
+                        </div>
+                        <!--modal Footer-->
+                        <div class="modal-footer" >
+                            <div class="row">
+                                <div class="col-lg-3  col-md-3 col-sm-3 col-xs-4">
+                                    <button type="submit" class="btn btn-success">Ajouter</button>
+                                </div>
+                                <div class="col-lg-offset-5 col-lg-3 col-md-offset-5 col-md-3 col-sm-offset-5 col-sm-3 col-xs-8">
+                                    <button type="submit" class="btn btn-default " data-dismiss="modal">Annuler</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin popup ajouter un UE -->
+
+    <!-- Debut lister tout les UEs -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="table_Batiment">
+            <thead>
+            <tr>
+                <th>Nom</th>
+
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="batiment:${batiments}">
+                <td th:text="${batiment.nom}"></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/detail_emploidutemps/{id}(id=${batiment.id})}">
+                        Voir
+                    </a>
+                </td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Fin lister tout les UEs -->
+
+    <!-- Debut Datatable lister UEs -->
+    <script>
+        $(document).ready(function() {
+            $("#table_Batiment").DataTable({
+
+            });
+        })
+    </script>
+    <!-- Fin Datatable lister UEs -->
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
 </body>
 </html>

@@ -1,4 +1,7 @@
 package uasz.sn.Gestion_Enseignement.Repartition.modele;
 
-public class StatutEnseignement {
+public enum StatutEnseignement {
+    EN_ATTENTE,
+    ACCEPTE,
+    REFUSE
 }

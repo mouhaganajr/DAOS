@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org"   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_Permanent">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Formations</h3>
+
+
+
+
+    <!-- Debut lister tout les Formations -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="table_Formation">
+            <thead>
+            <tr>
+                <th>Nom</th>
+
+                <th>Niveau</th>
+
+                <th>Details</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="formation:${formations}">
+
+                <td th:text="${formation.nom}"></td>
+                <td th:text="${formation.niveau}"></td>
+
+                <td>
+                    <a class="btn btn-primary" th:href="@{/EnseignementVac/detail/{id}(id=${formation.id})}">
+                        Voir
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Fin lister tout les formations -->
+
+    <!-- Debut Datatable lister formations -->
+    <script>
+        $(document).ready(function() {
+            $("#table_Formation").DataTable({
+
+            });
+        })
+    </script>
+    <!-- Fin Datatable lister table_Formations -->
+
+</div>
+
 </body>
 </html>

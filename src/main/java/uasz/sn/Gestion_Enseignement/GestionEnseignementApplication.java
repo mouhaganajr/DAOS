@@ -8,6 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uasz.sn.Gestion_Enseignement.Authentification.modele.Role;
 import uasz.sn.Gestion_Enseignement.Authentification.service.UtilisateurService;
+import uasz.sn.Gestion_Enseignement.EmploiDuTemps.modele.Batiment;
+import uasz.sn.Gestion_Enseignement.EmploiDuTemps.modele.Salle;
+import uasz.sn.Gestion_Enseignement.EmploiDuTemps.service.Batimentservice;
+import uasz.sn.Gestion_Enseignement.EmploiDuTemps.service.Salleservice;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.Classe;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.EC;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.Formation;
@@ -45,6 +49,10 @@ public class GestionEnseignementApplication implements CommandLineRunner {
     FormationService formationService;
 	@Autowired
 	ClasseService classeService;
+	@Autowired
+	Batimentservice batimentservice;
+	@Autowired
+	Salleservice salleservice;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -158,6 +166,65 @@ public class GestionEnseignementApplication implements CommandLineRunner {
 		formationService.ajouter_Formation(formation1);
 
 
+	//ajout Batiment
+
+		Batiment batiment = new Batiment();
+		batiment.setNom("PGF-SUP");
+		batimentservice.ajouter_Batiment(batiment);
+
+		Batiment batiment1 = new Batiment();
+		batiment1.setNom("BP");
+		batimentservice.ajouter_Batiment(batiment1);
+
+		Batiment batiment2 = new Batiment();
+		batiment2.setNom("C0");
+		batimentservice.ajouter_Batiment(batiment2);
+
+		Batiment batiment3 = new Batiment();
+		batiment3.setNom("INFO");
+		batimentservice.ajouter_Batiment(batiment3);
+
+    // ajout Salle
+
+		Salle salle = new Salle();
+		salle.setNumero("PGF-SUP 1");
+		salle.setBatiment(batiment);
+		salleservice.ajouter_Salle(salle);
+
+		Salle salle1 = new Salle();
+		salle1.setNumero("PGF-SUP 2");
+		salle1.setBatiment(batiment);
+		salleservice.ajouter_Salle(salle1);
+
+		Salle salle2 = new Salle();
+		salle2.setNumero("BP 1");
+		salle2.setBatiment(batiment1);
+		salleservice.ajouter_Salle(salle2);
+
+		Salle salle3 = new Salle();
+		salle3.setNumero("BP 2");
+		salle3.setBatiment(batiment1);
+		salleservice.ajouter_Salle(salle3);
+
+		Salle salle4 = new Salle();
+		salle4.setNumero("CO 1");
+		salle4.setBatiment(batiment2);
+		salleservice.ajouter_Salle(salle4);
+
+		Salle salle5 = new Salle();
+		salle5.setNumero("CO 2");
+		salle5.setBatiment(batiment2);
+		salleservice.ajouter_Salle(salle5);
+
+		Salle salle6 = new Salle();
+		salle6.setNumero("INFO 1");
+		salle6.setBatiment(batiment3);
+		salleservice.ajouter_Salle(salle6);
+
+		Salle salle7 = new Salle();
+		salle7.setNumero("INFO 2");
+		salle7.setBatiment(batiment3);
+		salleservice.ajouter_Salle(salle7);
 	}
 
 

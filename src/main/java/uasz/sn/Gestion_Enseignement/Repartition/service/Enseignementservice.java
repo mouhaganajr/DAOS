@@ -14,6 +14,7 @@ import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.UE;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.service.ECService;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.service.MaquetteService;
 import uasz.sn.Gestion_Enseignement.Repartition.modele.Enseignement;
+import uasz.sn.Gestion_Enseignement.Repartition.modele.StatutEnseignement;
 import uasz.sn.Gestion_Enseignement.Repartition.repository.Enseignementrepository;
 import uasz.sn.Gestion_Enseignement.Utilisateur.modele.Enseignant;
 import uasz.sn.Gestion_Enseignement.Utilisateur.repository.EnseignantRepository;
@@ -70,5 +71,15 @@ public class Enseignementservice {
         return enseignementrepository.save(enseignement);
 
     }
+
+    @Transactional
+    public Enseignement updateStatut(Long id, StatutEnseignement statut) {
+        return enseignementrepository.findById(id)
+                .map(enseignement -> {
+                    enseignement.setStatut(statut);
+                    return enseignementrepository.save(enseignement);
+                }).orElseThrow(() -> new RuntimeException("Enseignement non trouvé"));
+    }
+
 
 }

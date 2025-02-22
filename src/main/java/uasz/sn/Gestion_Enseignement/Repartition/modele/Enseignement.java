@@ -11,6 +11,7 @@ import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.UE;
 import uasz.sn.Gestion_Enseignement.Utilisateur.modele.Enseignant;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -41,4 +42,9 @@ public class Enseignement {
     @Pattern(regexp = "CM|TD|TP", message = "Type d'enseignement invalide !")
     private String typeEnseignement;
 
+    @Enumerated(EnumType.STRING)
+    private StatutEnseignement statut = StatutEnseignement.EN_ATTENTE; // Valeur par défaut
+
+    @OneToMany(mappedBy = "enseignement", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Collection<Choix> choixes;
 }

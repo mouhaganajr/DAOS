@@ -1,10 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_ChefDepartement">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Liste des EC</title>
 </head>
 <body>
-$END$
+
+<div layout:fragment="custom-content" class="container">
+    <br/>
+    <h3 style="text-align: center">La liste des Salles du Batiment </h3>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div th:each="batiment : ${batiment}">
+            <span th:text="${batiment.nom}"></span>
+
+        </div>
+
+        <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+            <div style="text-align: center">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_Ajouter_Salle">Ajouter Salle</button>
+            </div>
+        </div>
+
+        <!-- Début popup ajouter un EC -->
+        <div class="modal fade" id="form_Ajouter_Salle">
+            <div class="modal-dialog">
+                <div class="modal-content panel-success">
+                    <div class="modal-header panel-heading">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter un Salle</h4>
+                    </div>
+                    <!-- Le formulaire inclut th:action pour générer dynamiquement l'URL -->
+                    <form th:action="@{/ChefDepartement/ajouterSalle}" method="post">
+                        <div class="modal-body">
+                            <!-- Champ affichant l'ID de l'UE (lecture seule) -->
+                            <div class="form-group">
+                                <label>ID du Batiment</label>
+                                <input type="text" class="form-control" name="batiment" th:value="${batiment.id}" readonly/>
+                            </div>
+
+                            <div class="form-group">
+                                <label>numero</label>
+                                <input type="text" class="form-control" name="numero" required/>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Ajouter</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Fin popup ajouter un EC -->
+
+
+
+        <!-- Début tableau lister les EC -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="table_Salle">
+                <thead>
+                <tr>
+                    <th>Numero</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="salle : ${salles}">
+                    <td th:text="${salle.numero}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Fin lister tout les ECs -->
+
+        <!-- Debut Datatable lister ECs -->
+        <script>
+            $(document).ready(function() {
+                $("#table_Salle").DataTable({
+
+                });
+            })
+        </script>
+        <!-- Fin Datatable lister ECs -->
+
+    </div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
 </body>
 </html>

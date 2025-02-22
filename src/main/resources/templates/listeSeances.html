@@ -1,10 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Planning des Séances</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<div class="container mt-5">
+    <h2 class="text-center">Planning des Séances</h2>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Jour / Créneau</th>
+            <!-- Boucle pour afficher les créneaux comme en-tête -->
+            <th th:each="creneau : ${creneaux}" th:text="${creneau}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Boucle pour afficher les jours en première colonne -->
+        <tr th:each="jour : ${jours}">
+            <td th:text="${jour}"></td>
+
+            <!-- Boucle imbriquée pour afficher les séances -->
+            <td th:each="creneau : ${creneaux}">
+                <div th:each="seance : ${seance}">
+                    <b th:text="${seance.choixes[0].enseignant.prenom + ' ' + seance.choixes[0].enseignant.nom}"></b>
+                    <br>
+                    <span th:text="${seance.choixes[0].enseignement.ec.libelle}"></span>
+                    <br>
+                    <small th:text="${seance.salles[0].numero + ' - ' + seance.salles[0].batiment.nom}"></small>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/ChefDepartement/ajouterseance" class="btn btn-primary mt-3">Ajouter une Séance</a>
+</div>
+
 </body>
 </html>

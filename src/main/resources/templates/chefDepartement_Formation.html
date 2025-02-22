@@ -73,6 +73,7 @@
                 <th>Operations</th>
 
                 <th>Details</th>
+                <th>Choix</th>
 
             </tr>
             </thead>
@@ -95,7 +96,13 @@
                     </button>
                 <td>
                     <a class="btn btn-primary" th:href="@{/maquette/{id}(id=${formation.id})}">
-                        Voir
+                        Voir Maquette
+                    </a>
+                </td>
+
+                <td>
+                    <a class="btn btn-primary" th:href="@{/Chefdepartement/Enseignement/detail/{id}(id=${formation.id})}">
+                        Choix
                     </a>
                 </td>
                 <!-- Debut popup modifier un formation -->

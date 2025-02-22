@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Ajouter une séance</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-group.required label:after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+    </style>
 </head>
 <body>
+<div class="container mt-5">
+    <h2>Ajouter une séance</h2>
+    <form th:action="@{/ChefDepartement/ajouterseance}" method="post">
 
+        <!-- Sélection du jour -->
+        <div class="form-group required">
+            <label for="jour">Jour</label>
+            <select class="form-control" id="jour" name="jour" required>
+                <option value="" disabled selected>Sélectionnez un jour</option>
+                <option th:each="jour : ${jours}"
+                        th:value="${jour}"
+                        th:text="${jour}"></option>
+            </select>
+        </div>
+
+        <!-- Sélection du créneau horaire -->
+        <div class="form-group required">
+            <label for="creneau">Créneau horaire</label>
+            <select class="form-control" id="creneau" name="creneau" required>
+                <option value="" disabled selected>Sélectionnez un créneau</option>
+                <option th:each="creneau : ${creneaux}"
+                        th:value="${creneau}"
+                        th:text="${creneau}"></option>
+            </select>
+        </div>
+
+        <!-- Choix des enseignants/enseignements -->
+        <div class="form-group required">
+            <label for="choixIds">Enseignants et enseignements</label>
+            <select multiple class="form-control" id="choixIds" name="choixIds" required>
+                <option th:each="choix : ${choixes}"
+                        th:value="${choix.id}"
+                        th:text="${choix.enseignant.prenom + ' ' + choix.enseignant.nom + ' - ' + choix.enseignement.ec.libelle + ' (' + choix.enseignement.typeEnseignement + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Sélection des salles -->
+        <div class="form-group required">
+            <label for="salleIds">Salles</label>
+            <select multiple class="form-control" id="salleIds" name="salleIds" required>
+                <option th:each="salle : ${salles}"
+                        th:value="${salle.id}"
+                        th:text="${salle.numero + ' - ' + salle.batiment.nom}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Plage horaire détaillée -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group required">
+                    <label for="Heurededebut">Heure de début</label>
+                    <input type="time" class="form-control"
+                           id="Heurededebut" name="Heurededebut"
+                           min="08:00" max="20:00" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group required">
+                    <label for="Heuredefin">Heure de fin</label>
+                    <input type="time" class="form-control"
+                           id="Heuredefin" name="Heuredefin"
+                           min="08:00" max="20:00" required>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">
+            <i class="fas fa-calendar-plus"></i> Ajouter la séance
+        </button>
+    </form>
+</div>
 </body>
 </html>

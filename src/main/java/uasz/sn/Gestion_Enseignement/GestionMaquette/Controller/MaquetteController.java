@@ -83,20 +83,24 @@ public class MaquetteController {
     // Méthode pour afficher la maquette spécifique d'une formation et d'un semestre
     @RequestMapping(value = "/maquette/{id}", method = RequestMethod.GET)
     public String chefDepartement_Maquette(@PathVariable("id") Long id,
-                                           String semestre,
+                                           @RequestParam(value = "semestre", required = false, defaultValue = "1") int semestre,
                                            Model model,
                                            Principal principal) {
         // Récupérer la formation
         Formation formation = formationService.getById(id);
         model.addAttribute("formation", formation);
+
         try {
-            Maquette maquettes = maquetteService.rechercher(id);
-            model.addAttribute("maquettes",maquettes != null ? maquettes : new Maquette());
-        }catch (EntityNotFoundException e){
-            model.addAttribute("maquettes" , new Maquette());
+            // Récupérer les maquettes des deux semestres
+            Maquette maquetteSemestre1 = maquetteService.rechercherParSemestre(id, 1);
+            Maquette maquetteSemestre2 = maquetteService.rechercherParSemestre(id, 2);
+
+            model.addAttribute("maquetteSemestre1", maquetteSemestre1 != null ? maquetteSemestre1 : new Maquette());
+            model.addAttribute("maquetteSemestre2", maquetteSemestre2 != null ? maquetteSemestre2 : new Maquette());
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("maquetteSemestre1", new Maquette());
+            model.addAttribute("maquetteSemestre2", new Maquette());
         }
-
-
 
         // Ajouter le semestre actuel au modèle
         model.addAttribute("semestreActuel", semestre);
@@ -112,6 +116,7 @@ public class MaquetteController {
 
         return "maquette";
     }
+
 
 }
 

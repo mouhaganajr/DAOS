@@ -102,9 +102,15 @@ public class MaquetteService {
         return (maquette != null) ? new ArrayList<>(maquette.getUes()) : new ArrayList<>();
     }
 
-    public Maquette getMaquettesBySemestre(int semestre) {
-        return maquetteRepository.findBySemestre(semestre)
-                .orElse(null);
+    public Maquette getMaquetteBySemestre(int semestre, Formation formation) {
+        return maquetteRepository.findBySemestreAndFormation(semestre, formation);
+    }
+
+
+    public Maquette rechercherParSemestre(Long formationId, int semestre) {
+        Formation formation = new Formation();
+        formation.setId(formationId);
+        return maquetteRepository.findBySemestreAndFormation(semestre, formation);
     }
 
 

@@ -20,4 +20,10 @@ public interface Enseignementrepository extends JpaRepository<Enseignement,Long>
 
 
     Optional<Enseignement> findById(Long aLong);
+
+    Long id(int id);
+
+    @Query("SELECT e FROM Enseignement e JOIN FETCH e.enseignants")
+    List<Enseignement> findAllWithEnseignants();
+
 }

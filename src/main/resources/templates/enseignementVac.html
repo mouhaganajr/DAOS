@@ -1,10 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template_Permanent">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Liste des Maquettes</title>
 </head>
 <body>
-$END$
+
+<div layout:fragment="custom-content" class="container">
+
+    <br/>
+    <h3 style="text-align: center">La liste des Maquettes</h3>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <div th:each="formation : ${formation}">
+            <span th:text="${formation.nom}"></span> - <span th:text="${formation.Niveau}"></span>
+        </div>
+    </div>
+
+    <!-- Onglets pour Semestre 1 et Semestre 2 -->
+    <ul class="nav nav-tabs">
+        <li th:classappend="${semestreActuel == 'Semestre 1'} ? 'active' : ''">
+            <a data-toggle="tab" href="#tab_Semestre1">Semestre 1</a>
+        </li>
+        <li th:classappend="${semestreActuel == 'Semestre 2'} ? 'active' : ''">
+            <a data-toggle="tab" href="#tab_Semestre2">Semestre 2</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Tab Semestre 1 -->
+        <div id="tab_Semestre1" class="tab-pane fade" th:classappend="${semestreActuel == 'Semestre 1'} ? 'in active' : ''">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Maquette1">
+                    <thead>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>TD</th>
+                        <th>TP</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="ue : ${maquetteSemestre1.ues}">
+                        <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
+                            <th:block th:each="maquette : ${ue.maquettes}">
+                                <th:block th:if="${maquette.semestre == 1}">
+                                    <tr>
+                                        <td th:text="${ue.ecs[0].libelle}"></td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${ue.ecs[1].libelle}"></td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $("#table_Maquette1").DataTable({});
+                });
+            </script>
+        </div>
+
+        <!-- Tab Semestre 2 -->
+        <div id="tab_Semestre2" class="tab-pane fade" th:classappend="${semestreActuel == 'Semestre 2'} ? 'in active' : ''">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="table_Maquette_S2">
+                    <thead>
+                    <tr>
+                        <th>Intitulé</th>
+                        <th>TD</th>
+                        <th>TP</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="ue : ${maquetteSemestre2.ues}">
+                        <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
+                            <th:block th:each="maquette : ${ue.maquettes}">
+                                <th:block th:if="${maquette.semestre == 2}">
+                                    <tr>
+                                        <td th:text="${ue.ecs[0].libelle}"></td>
+
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${ue.ecs[1].libelle}"></td>
+
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $("#table_Maquette_S2").DataTable({});
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

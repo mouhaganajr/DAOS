@@ -116,7 +116,7 @@
                     </thead>
                     <tbody>
                     <!-- Boucle principale pour chaque UE -->
-                    <th:block th:each="ue : ${maquettes.ues}">
+                    <th:block th:each="ue : ${maquetteSemestre1.ues}">
                         <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
                             <th:block th:each="maquette : ${ue.maquettes}">
                                 <th:block th:if="${maquette.semestre == 1}">
@@ -250,7 +250,7 @@
                     </thead>
                     <tbody>
                     <!-- Boucle principale pour chaque UE -->
-                    <th:block th:each="ue : ${maquettes.ues}">
+                    <th:block th:each="ue : ${maquetteSemestre2.ues}">
                         <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
                             <th:block th:each="maquette : ${ue.maquettes}">
                                 <th:block th:if="${maquette.semestre == 2}">

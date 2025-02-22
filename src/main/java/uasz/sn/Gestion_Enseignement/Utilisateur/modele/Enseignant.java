@@ -6,10 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import uasz.sn.Gestion_Enseignement.Authentification.modele.Utilisateur;
+import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.EC;
 import uasz.sn.Gestion_Enseignement.GestionMaquette.modele.Maquette;
+import uasz.sn.Gestion_Enseignement.Repartition.modele.Choix;
 import uasz.sn.Gestion_Enseignement.Repartition.modele.Enseignement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -27,4 +30,7 @@ public abstract class Enseignant extends Utilisateur {
 
     @ManyToMany(mappedBy = "enseignants")// Relation bidirectionnelle avec Maquette
     private List<Enseignement> enseignements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "enseignant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Collection<Choix> choix;
 }

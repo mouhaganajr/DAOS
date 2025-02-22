@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="template_ChefDepartement">
+      layout:decorate="template_Permanent">
 <head>
     <meta charset="UTF-8">
     <title>Liste des Maquettes</title>
@@ -42,7 +42,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="ue : ${maquettes.ues}">
+                    <th:block th:each="ue : ${maquetteSemestre1.ues}">
                         <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
                             <th:block th:each="maquette : ${ue.maquettes}">
                                 <th:block th:if="${maquette.semestre == 1}">
@@ -53,7 +53,7 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="CM">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].CM}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir CM</button>
                                             </form>
                                         </td>
                                         <td>
@@ -61,7 +61,7 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="TD">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].TD}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
                                             </form>
                                         </td>
                                         <td>
@@ -69,10 +69,36 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="TP">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].TP}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
                                             </form>
                                         </td>
-
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${ue.ecs[1].libelle}"></td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="CM">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir CM</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </th:block>
                             </th:block>
@@ -82,20 +108,6 @@
                 </table>
             </div>
             <script>
-                function updateTypeValue(form) {
-                    // Get selected radio button value
-                    var selectedType = form.querySelector('input[name="type"]:checked');
-
-                    // Update hidden field with the selected value
-                    if (selectedType) {
-                        form.querySelector('input[name="type"]').value = selectedType.value;
-                    } else {
-                        // Optionally, you can handle the case where no radio is selected
-                        alert("Please select a type of enseignement!");
-                        return false; // Prevent form submission if no radio button is selected
-                    }
-                }
-
                 $(document).ready(function() {
                     $("#table_Maquette1").DataTable({});
                 });
@@ -116,7 +128,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="ue : ${maquettes.ues}">
+                    <th:block th:each="ue : ${maquetteSemestre2.ues}">
                         <th:block th:if="${ue.maquettes != null  && ue.maquettes.size() >0}">
                             <th:block th:each="maquette : ${ue.maquettes}">
                                 <th:block th:if="${maquette.semestre == 2}">
@@ -127,7 +139,7 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="CM">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].CM}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir CM</button>
                                             </form>
                                         </td>
                                         <td>
@@ -135,7 +147,7 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="TD">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].TD}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
                                             </form>
                                         </td>
                                         <td>
@@ -143,10 +155,37 @@
                                                 <input type="hidden" th:value="${ue.ecs[0].id}" name="ecId">
                                                 <input type="hidden" th:value="${maquette.id}" name="maquetteId">
                                                 <input type="hidden" name="type" value="TP">
-                                                <input type="checkbox" onchange="this.form.submit()" th:checked="${ue.ecs[0].TP}">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
                                             </form>
                                         </td>
 
+                                    </tr>
+                                    <tr>
+                                        <td th:text="${ue.ecs[1].libelle}"></td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="CM">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir CM</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TD">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TD</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/ajouterEnseignement}" method="post">
+                                                <input type="hidden" th:value="${ue.ecs[1].id}" name="ecId">
+                                                <input type="hidden" th:value="${maquette.id}" name="maquetteId">
+                                                <input type="hidden" name="type" value="TP">
+                                                <button type="submit" class="btn btn-primary" onclick="alert('Choisi avec succès')">Choisir TP</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </th:block>
                             </th:block>

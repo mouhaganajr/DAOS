@@ -17,7 +17,9 @@ public interface MaquetteRepository extends JpaRepository<Maquette,Long> {
 
     Optional<Maquette> findByFormationAndSemestre(Formation formationId, int semestre);
 
-    Optional<Maquette> findBySemestre(int semestre);
+    @Query("SELECT m FROM Maquette m LEFT JOIN FETCH m.ues WHERE m.semestre = :semestre AND m.formation = :formation")
+    Maquette findBySemestreAndFormation(@Param("semestre") int semestre, @Param("formation") Formation formation);
+
 }
 
 

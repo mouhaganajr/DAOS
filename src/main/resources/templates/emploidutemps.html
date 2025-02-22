@@ -1,10 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Emploi du Temps</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Ajout de styles pour l'impression/PDF */
+    @media print {
+      .download-btn { display: none; }
+      body { -webkit-print-color-adjust: exact; }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .cm {
+      background-color: lightblue;  /* Bleu pour CM */
+      color: black;
+    }
+
+    .td {
+      background-color: lightgreen; /* Vert pour TD */
+      color: black;
+    }
+
+    .tp {
+      background-color: lightcoral; /* Rouge pour TP */
+      color: white;
+    }
+  </style>
 </head>
 <body>
-$END$
+
+<div id="pdfContent" class="container mt-5">
+  <h2 class="text-center">Emploi du Temps</h2>
+
+  <!-- Bouton de téléchargement PDF -->
+  <button class="btn btn-success download-btn" onclick="generatePDF()">
+    Télécharger en PDF
+  </button>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Jour / Créneau</th>
+      <!-- Affichage des créneaux en première ligne -->
+      <th th:each="creneau : ${creneaux}" th:text="${creneau}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Boucle sur les jours de la semaine -->
+    <tr th:each="jourEntry : ${structureSeances}">
+      <td th:text="${jourEntry.key}"></td> <!-- Nom du jour -->
+
+      <!-- Boucle sur les créneaux -->
+      <td th:each="creneau : ${creneaux}">
+        <!-- Vérification si une séance est présente pour ce créneau -->
+        <div th:if="${jourEntry.value.containsKey(creneau)}"
+             th:each="seance : ${jourEntry.value.get(creneau)}"
+             th:classappend="${seance.choixes[0] != null && seance.choixes[0].enseignement.typeEnseignement == 'CM'} ? 'cm'
+                      : (${seance.choixes[0] != null && seance.choixes[0].enseignement.typeEnseignement == 'TD'} ? 'td'
+                      : 'tp')">
+          <b th:if="${seance.choixes[0] != null}"
+             th:text="'Personnel : ' + ${seance.choixes[0].enseignant.nom + ' ' + seance.choixes[0].enseignant.prenom}"></b>
+          <br>
+          <span th:if="${seance.choixes[0] != null}"
+                th:text="'Matière : ' + ${seance.choixes[0].enseignement.ec.libelle}"></span>
+          <br>
+          <span th:if="${seance.choixes[0] != null}"
+                th:text="'Type : ' + ${seance.choixes[0].enseignement.typeEnseignement}"></span>
+          <br>
+          <small th:if="${seance.salles[0] != null}"
+                 th:text="'Salle : ' + ${seance.salles[0].numero + ' - ' + seance.salles[0].batiment.nom}"></small>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <a href="/ChefDepartement/ajouterseance" class="btn btn-primary mt-3">Ajouter une Séance</a>
+</div>
+
+<!-- Ajout de la bibliothèque html2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  function generatePDF() {
+    // Configuration du PDF
+    const element = document.getElementById('pdfContent');
+    const opt = {
+      margin:       10,
+      filename:     'emploi_du_temps.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a3', orientation: 'landscape' }
+    };
+
+    // Génération du PDF
+    html2pdf().set(opt).from(element).save();
+  }
+</script>
+
 </body>
 </html>
